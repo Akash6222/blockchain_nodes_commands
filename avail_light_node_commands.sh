@@ -29,8 +29,13 @@ sudo systemctl start availightd
 # sudo systemctl status availightd
 
 timeout 5s  journalctl -f -u availightd.service --no-hostname -o cat | sed 's/\x1b\[[0-9;]*m//g' > avail_light.log
-grep "public key" avail_light.log | awk '{print $NF}' > public_key.txt
+grep "Avail ss58 address" avail_light.log | grep -oP '(?<=address: )[^,]+' > avail_addr.txt
+grep "Avail ss58 address" avail_light.log | grep -oP '(?<=public key: ).*' > public_key.txt
+grep "avail_secret_seed_phrase" /identity.toml | awk -F "'" '{print $2}' > seed.txt
+
+cat avail_addr.txt
 cat public_key.txt
+cat seed.txt
 #curl -sL1 http://avail.sh | bash
 
 
